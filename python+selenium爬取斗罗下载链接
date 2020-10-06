@@ -1,0 +1,63 @@
+import requests
+from lxml import etree
+from selenium import webdriver
+import time
+
+BaseUrl = "https://v.qq.com/"
+driver_path = r"C:\Users\happy\Desktop\mypython\chromedriver.exe"
+driver = webdriver.Chrome(executable_path=driver_path)
+
+
+First_urls = []
+Headers = {
+    "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "cookie":"pgv_pvid=2605542601; tvfe_boss_uuid=294042e39646a3b6; video_guid=733c7547ebc77be7; video_platform=2; ts_uid=4257536460; pgv_pvi=9086613504; RK=D3ChikW2TB; ptcz=98acc354ef584f6547bc0ff4229779f4ee28fd8ee6e9920801f3d2219232bece; tvfe_search_uid=9e8f0580-d8f8-44b6-ace5-1b1287f53ccf; o_cookie=1203083157; m_pvid=8980070130; eas_sid=F125c9l1P568f1v1E7C2h9T1a3; sd_userid=1381591961493726; sd_cookie_crttime=1591961493726; mobileUV=1_172eebf7725_264f8; QQLivePCVer=50201605; ts_refer=www.baidu.com/link; pac_uid=1_1203083157; bucket_id=9231009; main_login=wx; openid=oXw7q0AtXR-Gc5vRrztruH2dzZas; vuserid=1468927769; appid=wxa75efa648b60994b; wx_nick=%E7%BB%86%E6%B0%B4%E6%B5%81%E9%95%BF; login_remember=wx; wx_head=https://thirdwx.qlogo.cn/mmopen/vi_32/aSzCicAibCOj0hMWiaz90GubMlabK8wZT30CHSJ6LSiaAXUbnllic37bVgkwASSQUdPNQqic40H7cdK04iaMpeH9IibHzA/132; access_token=37_XYqnQ5EFp3L1zYqUzPkhDs9P9sDRFly3Mcku4k5KAjFGqco83pIYEgi9mtl4lX3uMuPIbv18oWP25isyQB-TVw; vusession=J7TV28B40ZoAXRZnQ-fNjQ..; pgv_info=ssid=s2198333914; ad_play_index=115; ptag=www_baidu_com|videolist:click; ts_last=v.qq.com/x/cover/2xslevs0grk9vy0/m0541k9i0jd.html",
+    "referer":"https://www.baidu.com/link?url=BoHBcP0_PgMGgAChcAAija22RfWWYnQORcu-fGQavJRvwa7QuVXWHdGh5QyVsBcJepHJtZA8ypo9ahtGbCfh6_&wd=&eqid=cdccb12d00024f78000000065f7ab706",
+    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/82.0.4050.0 Safari/537.36 Edg/82.0.423.0"
+}
+
+def rough_spider(url):
+    response = requests.get(url=url, headers=Headers)
+    text = response.text
+    html = etree.HTML(text)
+    first_urls = html.xpath("//div[@class='mod_episode']//@id")
+
+    #//div[@class='mod_episode']/span/@id  //div[@class='mod_episode']//@id
+    i = 1
+    for first_url in first_urls:
+        first_url = "https://v.qq.com/x/cover/m441e3rjq9kwpsc/"+first_url+".html"
+        First_urls.append(first_url)
+    detail_spider(url)
+
+
+
+
+def detail_spider(url):
+    driver.get(url)
+    time.sleep(20)
+    i = 1
+    for url in First_urls:
+        driver.get(url)
+        link = driver.execute_script(
+            "return PLAYER._DownloadMonitor.context.dataset.title,PLAYER._DownloadMonitor.context.dataset.currentVideoUrl")
+        with open('斗罗大陆下载链接.txt','a',encoding='utf-8') as f:
+            f.write(link)
+            f.write("\n")
+        i += 1
+
+   #  driver.get(url)
+   # #等待登录 20s
+   #  time.sleep(20)
+   #  link = driver.execute_script("return PLAYER._DownloadMonitor.context.dataset.title,PLAYER._DownloadMonitor.context.dataset.currentVideoUrl")
+   #  print(link)
+
+def main():
+    url = "https://v.qq.com/x/cover/m441e3rjq9kwpsc/m00253deqqo.html"
+    rough_spider(url)
+
+if __name__ == '__main__':
+    main()
+     # url = "https://v.qq.com/x/cover/m441e3rjq9kwpsc/m00253deqqo.html"
+     # rough_spider(url)
+    # url = "https://v.qq.com/x/cover/2xslevs0grk9vy0/m0541k9i0jd.html"
+    # detail_spider(url)
