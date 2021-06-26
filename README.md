@@ -1,7 +1,1 @@
-This is what I've learned about Python these days.
-
-Hope you like it.
-
-I'm going to learn Pyqt5 next,and make a GUI program.
-
-#Thanks!
+![](http://d0.ananas.chaoxing.com/download/9cf8e4c64b162e62d91409202eb36b48?at_=1624676725799&ak_=b23ead1a7da8638e7628ad2a26c3de10&ad_=9c10f22a21ae6d28d28fc1a896f17612&fn=QQ%E6%88%AA%E5%9B%BE20210626110449)
